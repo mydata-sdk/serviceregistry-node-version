@@ -12,6 +12,7 @@ var bodyParser = require("body-parser");
 var extend = require('util')._extend;
 var ObjectID = require('mongodb').ObjectID;
 var collectionName = "serviceregistry";
+var cors = require('cors');
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
@@ -20,20 +21,7 @@ process.on('uncaughtException', function (error)	 {
     console.log(error.stack);
 });
 
-app.use(baseUrl, function(req, res, next) {
-    var contype = req.headers['content-type'];
-    if (!contype || contype.indexOf('application/json') !== 0) {
-        res.status(400);
-        return res.send(JSON.stringify(createErrorMsg("content type should be application/json")));
-    }
-    next();}, function(req, res, next) {
-    //CORS enabled, too loose :)
-    res.header("Access-Control-Allow-Origin", "*");
-    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-
-
-    next();
-});
+app.use(cors());
 
 function createErrorMsg(msg) {
     var o ={};
@@ -121,6 +109,12 @@ app.get(baseUrl, function(req,res){
 
 
 app.post(baseUrl, function (req, res) {
+	contype = req.headers['content-type'];
+    if (!contype || contype.indexOf('application/json') !== 0) {
+        res.status(400);
+        return res.send(JSON.stringify(createErrorMsg("content type should be application/json")));
+    }
+
     console.log("post");
     res.type('json');
     MongoClient.connect(mongoConnStr, function(err, db) {
