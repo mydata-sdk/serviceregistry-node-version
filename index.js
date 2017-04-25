@@ -84,7 +84,6 @@ app.get(baseUrl, function(req,res){
             return;
         };
         db.collection(collectionName).find().toArray(function(err, doc) {
-            db.close() ;
             if (doc){
                 console.log(doc._id);
                 res.header("content-type", "application/json");
