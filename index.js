@@ -3,11 +3,12 @@ var bodyParser     =        require("body-parser");
 var app = express();
 var port = 8080;
 var router = express.Router();
-//var host = "http://178.62.229.148/8080"
 var baseUrl = "/serviceregistry-roa/resourcedirectory/v1/servicergistrations";
 var MongoClient = require('mongodb').MongoClient;
-//mongodb://Service:dhrproject@mongo:27017/serviceregistry
-var mongoConnStr = "mongodb://Service:dhrproject@mongo:27017/serviceregistry" //"mongodb://localhost:27017/Registry"
+//for localhost
+var mongoConnStr = "mongodb://localhost:27017/Registry";
+//for Docker
+//var mongoConnStr = "mongodb://Service:dhrproject@mongo:27017/serviceregistry";
 var bodyParser = require("body-parser");
 var extend = require('util')._extend;
 var ObjectID = require('mongodb').ObjectID;
@@ -15,7 +16,7 @@ var collectionName = "serviceregistry";
 var cors = require('cors');
 
 app.use(bodyParser.urlencoded({ extended: true }));
-app.use(bodyParser.json());
+//app.use(bodyParser.json());
 
 process.on('uncaughtException', function (error)	 {
     console.log(error.stack);
@@ -47,7 +48,7 @@ app.get(baseUrl + '/:service_id', function(req,res){
         };
         console.log("getting service by id " + req.params.service_id);
 
-        db.collection(collectionName).findOne({_id: ObjectID(req.params.service_id)},function(err, doc) {
+        db.collection(collectionName).findOne({id: req.params.service_id},function(err, doc) {
 
             if (doc){
                 res.header("content-type", "application/json");
@@ -107,7 +108,7 @@ app.get(baseUrl, function(req,res){
 });
 
 
-app.post(baseUrl, function (req, res) {
+app.post(baseUrl, bodyParser.json(), function (req, res) {
 	contype = req.headers['content-type'];
     if (!contype || contype.indexOf('application/json') !== 0) {
         res.status(400);
@@ -134,7 +135,10 @@ app.post(baseUrl, function (req, res) {
                 db.close();
                 return;
             }
-            res.header('location', baseUrl + "/" + records.insertedIds[0]);
+            res.header('location', baseUrl + "/" + req.body.id);
+            res.status(201);
+            res.send('OK');
+            /*
             db.collection(collectionName).update({"_id" :ObjectID(records.insertedIds[0]) },{$set : {"id":records.insertedIds[0]}}, function(err, records) {
             if (err) {
                 //throw err;
@@ -147,6 +151,7 @@ app.post(baseUrl, function (req, res) {
             res.send('OK');
             db.close();
         });
+           */
         });
 
     });
