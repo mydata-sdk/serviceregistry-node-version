@@ -3,10 +3,10 @@ var bodyParser     =        require("body-parser");
 var app = express();
 var port = 8080;
 var router = express.Router();
-var baseUrl = "/serviceregistry-roa/resourcedirectory/v1/servicergistrations";
+var baseUrl = "/serviceregistry-roa/resourcedirectory/v1/serviceregistrations";
 var MongoClient = require('mongodb').MongoClient;
 //for localhost
-var mongoConnStr = "mongodb://localhost:27017/Registry";
+var mongoConnStr = "mongodb://localhost:27017/serviceregistry";
 //for Docker
 //var mongoConnStr = "mongodb://Service:dhrproject@mongo:27017/serviceregistry";
 var bodyParser = require("body-parser");
