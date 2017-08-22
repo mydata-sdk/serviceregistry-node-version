@@ -48,7 +48,7 @@ app.get(baseUrl + '/:service_id', function(req,res){
         };
         console.log("getting service by id " + req.params.service_id);
 
-        db.collection(collectionName).findOne({id: req.params.service_id},function(err, doc) {
+        db.collection(collectionName).findOne({serviceId: req.params.service_id},function(err, doc) {
 
             if (doc){
                 res.header("content-type", "application/json");
@@ -135,7 +135,7 @@ app.post(baseUrl, bodyParser.json(), function (req, res) {
                 db.close();
                 return;
             }
-            res.header('location', baseUrl + "/" + req.body.id);
+            res.header('location', baseUrl + "/" + req.body.serviceId);
             res.status(201);
             res.send('OK');
             /*
