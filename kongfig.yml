@@ -14,7 +14,7 @@ apis:
             preflight_continue: false
             credentials: false
     attributes:
-      request_host: dev.registry.sandbox.koodaacraft.org
+      request_host: dev.registry.sandbox.mydata.fi
       strip_request_path: true
       preserve_host: false
       upstream_url: http://nodeversionproper:8080 # (required)
