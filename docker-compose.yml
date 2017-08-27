@@ -1,0 +1,46 @@
+version: '2'
+services:
+  nodeversionproper:
+    build:
+      context: ./node
+      dockerfile: Dockerfile
+      args:
+        - NODE_ENV=production
+    restart: unless-stopped
+    container_name: nodeversionproper
+    environment:
+      - VIRTUAL_HOST=nodeversion.local
+#      - VIRTUAL_PATH=/registry/search
+#      - VIRTUAL_PORT=8081
+    ports:
+      - "8080"
+#    links:
+#      - mongo-db:mongo
+#    depends_on:
+#      - mongo-seed
+    networks:
+      - mydata-service-registry-network
+      - mydata-sandbox-backbone
+
+  kongfig:
+    image: mashupmill/kongfig
+# Alternatively you can specify kongfig.yml using ENV_VAR
+# https://github.com/MashupMill/docker-kongfig/blob/master/entrypoint.sh#L23
+#    environment:
+#      - CONFIG=/config/
+    volumes:
+      - ${COMPOSEROOT}/serviceregistry-node-version/:/config/
+    command: --path kongfig.yml --host kong:8001
+    networks:
+      - mydata-sandbox-backbone
+
+
+
+networks:
+  mydata-service-registry-network:
+  mydata-service-registry-mongodb:
+    external: true
+  mydata-sandbox-backbone:
+    external: true
+
+

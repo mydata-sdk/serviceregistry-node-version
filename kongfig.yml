@@ -1,0 +1,22 @@
+host: 'kong:8001'
+headers: []
+apis:
+  - name: node-version-proper.local # unique api name
+    ensure: "present" # Set to "removed" to have Kongfig ensure the API is removed. Default is present.
+    plugins:
+      - name: basic-auth
+        attributes:
+          config:
+            hide_credentials: true
+      - name: cors
+        attributes:
+          config:
+            preflight_continue: false
+            credentials: false
+    attributes:
+      request_host: dev.registry.sandbox.koodaacraft.org
+      strip_request_path: true
+      preserve_host: false
+      upstream_url: http://nodeversionproper:8080 # (required)
+
+
